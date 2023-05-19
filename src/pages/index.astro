@@ -1,22 +1,31 @@
 ---
 import Layout from "../layouts/Layout.astro";
-import Title from "../components/Title.astro";
+
+import { useSanityClient } from "astro-sanity";
+import { urlFor } from "../lib/urlForImage"
+
+const projects = await useSanityClient().fetch(`*[_type == "project"]`);
 ---
 
 <Layout title="Welcome to Astro.">
   <main>
-    <Title title="avidu" />
+    <!-- -------------TITLE------------- -->
+    <h1>Pixelated Image Reveal Effect</h1>
 
-   
+    <!-- -------------IMAGES------------- -->
+
+    {
+      projects.map((project) => (
+        <li>
+          <a href={`/projects/${project.slug.current}`}>{project.title}</a>
+          <img src={urlFor(project.mainImage).width(500).height(300).url()} alt={project.title}>
+        </li>
+      ))
+    }
   </main>
 </Layout>
 
 <style>
-  main {
-    margin: auto;
-    padding: 1.5rem;
-    max-width: 60ch;
-  }
   h1 {
     font-size: 3rem;
     font-weight: 800;
